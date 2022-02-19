@@ -18,7 +18,9 @@
  *
  */
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+
+const privateKeys = ['0x98b60008dbf386b5a9e7c18a27f250c7f377dd2dfbc0728a053601c013293273'];
 //
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
@@ -35,6 +37,14 @@ module.exports = {
    */
 
   networks: {
+    bscTestnet: {
+      provider: () => new HDWalletProvider(
+          privateKeys,
+          'https://data-seed-prebsc-1-s1.binance.org:8545/'
+      ),
+      network_id: 97,
+      skipDryRun: true,
+  }
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
     // You should run a client (like ganache-cli, geth or parity) in a separate terminal
