@@ -66,33 +66,93 @@ build
     └── <json_files>
 ```
 
-## Develop & Deploy
+Artifacts (JSON files) contain ABI, bytecode, metadata, compiler info, network detail, etc... They get update every time we compile new changes to the contract or deploy them.
 
-To start the local built-in development chain, Ganache:
-```console
-truffle develop
+Here, I've created `SampleContract` inside "SampleContract.sol" file, containing 2 functions: _setData_ and _getData_.
 
-> migrate --reset
-```
-
-For deploying to the public testnet or mainnet:
-
-```console
-truffle migrate --reset --network <network>
-```
-
-## Interacting with the contract
-
-```console
-$ truffle console --network <network>
-
-> contract = await ContractName.deployed()
-
-> contract.address
-```
+This will generate **./build/contracts/SampleContract.json** after compilation.
 
 ## Testing
+
+Smart contracts cannot be changed once they're deployed. Hence their rigorous testing is crucial. 
+
+Testing is done using `moca`
 
 ```console
 truffle test
 ```
+
+Here, I've written `SampleContractTest.js` file to see if it's setting and getting the data value properly.
+
+## Deployment
+
+In truffle project, we write the deployment script in `migrations` folder. 
+
+Here, I've written `2_deploy_contracts.js` file.
+
+### On local chain
+
+To start the local built-in development chain, Ganache, run:
+
+```console
+truffle develop
+```
+
+This will start a new prompt, where you can run the deployment command:
+
+```console
+> migrate --reset
+```
+
+### On public testnet
+
+1. Get the cryptocurrency from the faucet on one of your wallet address. For example, go to [This Faucet](https://testnet.binance.org/faucet-smart) for getting BNB on BSC Testnet.
+
+2. Install `hdwallet-provider` using following command:
+
+```console
+npm install @truffle/hdwallet-provider
+```
+
+3. Add these two line in `truffle-config.js` at the beginning:
+
+```javascript
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+const privateKeys = ['0x + YOUR_PRIVATE_KEY'];
+```
+
+4. Add the network details in the "networks" section. (For RPC chain URL, see [this page](https://docs.binance.org/smart-chain/developer/rpc.html)):
+
+```javascript
+"networks": {
+    bscTestnet: {
+        provider: () => new HDWalletProvider(
+            privateKeys,
+            'https://data-seed-prebsc-1-s1.binance.org:8545/'
+        ),
+        network_id: 97,
+        skipDryRun: true,
+    }
+}
+```
+
+5. For deploying to the public testnet (here _bscTestnet_) or mainnet, run:
+
+```console
+truffle migrate --reset --network bscTestnet
+```
+
+## Interacting with the contract
+
+### Using console
+```console
+truffle console --network <network>
+```
+
+This will start a prompt where you can run the javascript code like following:
+
+```javascript
+contract = await ContractName.deployed()
+contract.address
+```
+
