@@ -2,11 +2,15 @@
 
 Truffle is a framework that is used for the development, deployment and testing of the smart contracts.
 
-It is used for for their:
+```mermaid
+  graph LR
 
-    - Compilation
-    - Deployment
-    - Testing
+  A(Truffle)
+
+  A --> B[Compilation]
+  A --> C[Deployment]
+  A --> D[Testing]
+```
 
 ## Installtion
 
